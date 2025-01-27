@@ -1,0 +1,40 @@
+{
+  "name": "afragen/git-updater-federation",
+  "description": "Add federation between Git Updater based Update API servers.",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andy Fragen",
+      "email": "andy@thefragens.com",
+      "homepage": "https://thefragens.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/afragen/git-updater-federation/issues",
+    "source": "https://github.com/afragen/git-updater-federation"
+  },
+  "prefer-stable": true,
+  "require": {
+    "php": ">=8.0"
+  },
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^3.0.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Fragen\\Git_Updater\\Federation\\": "src/Federation/"
+    }
+  },
+  "scripts": {
+    "wpcs": [
+      "vendor/bin/phpcbf .; vendor/bin/phpcs ."
+    ]
+  }
+}
