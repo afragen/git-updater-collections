@@ -8,14 +8,14 @@ name: WordPress Tests
 on:
   push:
     branches:
-      - develop
+      ##- develop
       - master
-      - main
+      ##- main
   pull_request:
     branches:
-      - develop
+      ##- develop
       - master
-      - main
+      ##- main
 
 jobs:
   run:

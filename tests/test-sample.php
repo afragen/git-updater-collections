@@ -2,7 +2,7 @@
 /**
  * Class SampleTest
  *
- * @package Git_Updater_Bitbucket
+ * @package Git_Updater_Federation
  */
 
 /**
