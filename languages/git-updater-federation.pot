@@ -1,0 +1,76 @@
+# Copyright (C) 2025 Andy Fragen
+# This file is distributed under the MIT.
+msgid ""
+msgstr ""
+"Project-Id-Version: Git Updater - Federation 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/afragen/git-updater-federation/issues\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-01-28T01:14:15+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: git-updater-federation\n"
+
+#. Plugin Name of the plugin
+#: git-updater-federation.php
+msgid "Git Updater - Federation"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: git-updater-federation.php
+msgid "https://github.com/afragen/git-updater-federation"
+msgstr ""
+
+#. Description of the plugin
+#: git-updater-federation.php
+msgid "Federate with other Git Updater Update API servers."
+msgstr ""
+
+#. Author of the plugin
+#: git-updater-federation.php
+msgid "Andy Fragen"
+msgstr ""
+
+#: src/Federation/Repo_List_Table.php:208
+msgid "Type"
+msgstr ""
+
+#: src/Federation/Repo_List_Table.php:209
+msgid "URI"
+msgstr ""
+
+#: src/Federation/Repo_List_Table.php:257
+msgid "Delete"
+msgstr ""
+
+#: src/Federation/Repo_List_Table.php:288
+msgid "Items would go to edit when we write that code."
+msgstr ""
+
+#: src/Federation/Repo_List_Table.php:440
+msgid "Federation List Table"
+msgstr ""
+
+#: src/Federation/Settings.php:124
+#: src/Federation/Settings.php:179
+msgid "Federation"
+msgstr ""
+
+#: src/Federation/Settings.php:186
+msgid "Federation Type"
+msgstr ""
+
+#: src/Federation/Settings.php:213
+msgid "Federation URI"
+msgstr ""
+
+#: src/Federation/Settings.php:220
+msgid "Ensure proper URI for federated Update API server."
+msgstr ""
+
+#: src/Federation/Settings.php:277
+msgid "Add URI for Git Updater Update API Servers for federation here."
+msgstr ""
