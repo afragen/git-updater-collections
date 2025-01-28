@@ -115,6 +115,17 @@ install_db() {
 	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
 }
 
+install_gu() {
+	if [ -d "${WP_CORE_DIR}wp-content/plugins/git-updater" ]; then
+		return;
+	fi
+
+	local LATEST_GU_ZIP=$(curl -s https://api.github.com/repos/afragen/git-updater/releases/latest | grep browser_download_url | cut -d '"' -f 4)
+	curl -L $LATEST_GU_ZIP > ${WP_CORE_DIR}wp-content/plugins/git-updater.zip
+	unzip -q ${WP_CORE_DIR}wp-content/plugins/git-updater.zip -d ${WP_CORE_DIR}wp-content/plugins
+}
+
 install_wp
 install_test_suite
 install_db
+install_gu
