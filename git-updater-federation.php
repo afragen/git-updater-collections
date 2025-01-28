@@ -20,7 +20,7 @@
  * Domain Path:       /languages
  * Text Domain:       git-updater-federation
  * GitHub Plugin URI: https://github.com/afragen/git-updater-federation
- * GitHub Languages:  https://github.com/afragen/git-updater-federation-translations
+ * xGitHub Languages:  https://github.com/afragen/git-updater-federation-translations
  * Primary Branch:    main
  * Requires at least: 6.6
  * Requires PHP:      8.0
