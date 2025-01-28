@@ -301,12 +301,11 @@ class Settings {
 	/**
 	 * Dropdown callback.
 	 *
-	 * @param arra $args Data passed from add_settings_field().
+	 * @param array $args Data passed from add_settings_field().
 	 *
 	 * @return void
 	 */
 	public function callback_dropdown( $args ) {
-		$options['type'] = [ 'federate' ];
 		?>
 		<label for="<?php echo esc_attr( $args['id'] ); ?>">
 		<select id="<?php echo esc_attr( $args['id'] ); ?>" name="git_updater_federation[<?php echo esc_attr( $args['setting'] ); ?>]">
