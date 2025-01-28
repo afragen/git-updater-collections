@@ -21,6 +21,15 @@ if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
 require_once $_tests_dir . '/includes/functions.php';
 
 /**
+ * Manually load dependencies.
+ */
+function _manually_load_dependencies() {
+	echo 'Loading Git Updater...' . PHP_EOL;
+	require WP_PLUGIN_DIR . '/git-updater/git-updater.php';
+}
+tests_add_filter( 'muplugins_loaded', '_manually_load_dependencies' );
+
+/**
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
