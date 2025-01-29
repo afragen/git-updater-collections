@@ -44,12 +44,24 @@ class Repo_List_Table extends \WP_List_Table {
 	protected static $examples = [];
 
 	/**
+	 * Holds federation types.
+	 *
+	 * @var array
+	 */
+	protected static $types = [];
+
+	/**
 	 * Constructor.
 	 *
 	 * @param array $options Array of saved options.
 	 */
 	public function __construct( $options ) {
 		global $status, $page;
+
+		self::$types = [
+			'federate'   => __( 'Federated', 'git-updater-federation' ),
+			'defederate' => __( 'Defederated', 'git-updater-federation' ),
+		];
 
 		$examples = [
 			[

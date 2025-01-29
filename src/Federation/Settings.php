@@ -26,16 +26,17 @@ class Settings {
 	 *
 	 * @var array $addition_types
 	 */
-	public static $federation_types = [
-		'federate',
-		'defederate',
-	];
+	public static $federation_types = [];
 
 	/**
 	 * Settings constructor.
 	 */
 	public function __construct() {
 		$this->load_options();
+		self::$federation_types = [
+			'federate'   => __( 'Federated', 'git-updater-federation' ),
+			'defederate' => __( 'Defederated', 'git-updater-federation' ),
+		];
 	}
 
 	/**
@@ -183,7 +184,7 @@ class Settings {
 
 		add_settings_field(
 			'type',
-			esc_html__( 'Federation Type', 'git-updater-federation' ),
+			esc_html__( 'Type', 'git-updater-federation' ),
 			[ $this, 'callback_dropdown' ],
 			'git_updater_federation',
 			'git_updater_federation',
@@ -210,7 +211,7 @@ class Settings {
 
 		add_settings_field(
 			'uri',
-			esc_html__( 'Federation URI', 'git-updater-federation' ),
+			esc_html__( 'URI', 'git-updater-federation' ),
 			[ $this, 'callback_field' ],
 			'git_updater_federation',
 			'git_updater_federation',
