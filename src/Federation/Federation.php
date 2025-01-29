@@ -100,7 +100,10 @@ class Federation {
 		$modified = false;
 		foreach ( self::$additions as $key => $addition ) {
 			foreach ( self::$defederate as $defederate ) {
-				if ( $addition['ID'] === $defederate['ID'] ) {
+				if ( ! isset( $defederate['source'] ) ) {
+					break;
+				}
+				if ( $addition['source'] === $defederate['source'] && $addition['ID'] === $defederate['ID'] ) {
 					unset( self::$additions[ $key ] );
 					$modified = true;
 					break;
@@ -120,6 +123,9 @@ class Federation {
 	protected function federate() {
 		foreach ( self::$additions as $addition ) {
 			foreach ( self::$federate as $key => $federate ) {
+				if ( ! isset( $federate['source'] ) ) {
+					break;
+				}
 				if ( $addition['ID'] === $federate['ID'] ) {
 					unset( self::$federate[ $key ] );
 					break;
