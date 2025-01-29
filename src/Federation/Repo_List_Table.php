@@ -65,26 +65,21 @@ class Repo_List_Table extends \WP_List_Table {
 
 		$examples = [
 			[
-				'ID'   => md5( 'plugin-noheader/plugin-noheader.php' ),
-				'type' => 'federate',
-				// 'slug' => 'plugin-noheader/plugin-noheader.php',
-				'uri'  => 'https://github.com/afragen/plugin-noheader',
+				'ID'   => md5( 'https://git-updater.com' ),
+				'type' => self::$types['federate'],
+				'uri'  => 'https://git-updater.com',
 			],
 			[
-				'ID'   => md5( 'theme-noheader' ),
-				'type' => 'federate',
-				// 'slug' => 'theme-noheader',
-				'uri'  => 'https://bitbucket.org/afragen/theme-noheader/',
+				'ID'   => md5( 'https://thefragens.net' ),
+				'type' => self::$types['federate'],
+				'uri'  => 'https://thefragens.net',
 			],
 		];
 		// self::$examples = $examples;
 		foreach ( (array) $options as $key => $option ) {
-			$option['ID']   = $option['ID'] ?: null;
-			$option['type'] = $option['type'] ?: null;
-			// $option['slug']           = $option['slug'] ?: null;
-			$option['uri'] = $option['uri'] ?: null;
-			// $option['primary_branch'] = ! empty( $option['primary_branch'] ) ? $option['primary_branch'] : 'master';
-			// $option['release_asset']  = ! empty( $option['release_asset'] ) ? '<span class="dashicons dashicons-yes"></span>' : false;
+			$option['ID']    = $option['ID'] ?: null;
+			$option['type']  = $option['type'] ?: null;
+			$option['uri']   = $option['uri'] ?: null;
 			$options[ $key ] = $option;
 		}
 		self::$options = (array) $options;
@@ -123,9 +118,6 @@ class Repo_List_Table extends \WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'uri':
-				// case 'slug':
-				// case 'primary_branch':
-				// case 'release_asset':
 			case 'type':
 				return $item[ $column_name ];
 			default:
@@ -216,11 +208,8 @@ class Repo_List_Table extends \WP_List_Table {
 	public function get_columns() {
 		$columns = [
 			// 'cb'             => '<input type="checkbox" />', // Render a checkbox instead of text.
-			// 'slug'           => esc_html__( 'Slug', 'git-updater-federation' ),
 			'type' => esc_html__( 'Type', 'git-updater-federation' ),
 			'uri'  => esc_html__( 'URI', 'git-updater-federation' ),
-			// 'primary_branch' => esc_html__( 'Primary Branch', 'git-updater-federation' ),
-			// 'release_asset'  => esc_html__( 'Release Asset', 'git-updater-federation' ),
 		];
 
 		return $columns;
@@ -244,7 +233,6 @@ class Repo_List_Table extends \WP_List_Table {
 		$sortable_columns = [
 			'uri'  => [ 'uri', true ],     // true means it's already sorted.
 			'type' => [ 'type', true ],
-			// 'api_key' => [ 'api_key', false ],
 		];
 
 		return $sortable_columns;
