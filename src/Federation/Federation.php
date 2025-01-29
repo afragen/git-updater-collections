@@ -53,19 +53,19 @@ class Federation {
 	 */
 	public function run() {
 		foreach ( self::$options as $option ) {
-			if ( 'defederate' === $option['type'] ) {
-				$additions        = $this->get_additions_data( $option['uri'] );
-				self::$defederate = array_merge( self::$defederate, $additions );
-				continue;
-			}
-			if ( 'federate' === $option['type'] ) {
+			if ( 'Federated' === $option['type'] ) {
 				$additions      = $this->get_additions_data( $option['uri'] );
 				self::$federate = array_merge( self::$federate, $additions );
 				continue;
 			}
+			if ( 'Defederated' === $option['type'] ) {
+				$additions        = $this->get_additions_data( $option['uri'] );
+				self::$defederate = array_merge( self::$defederate, $additions );
+				continue;
+			}
 		}
-		$this->defederate();
 		$this->federate();
+		$this->defederate();
 	}
 
 	/**
