@@ -2,14 +2,14 @@
 # This file is distributed under the MIT.
 msgid ""
 msgstr ""
-"Project-Id-Version: Git Updater - Federation 0.1.0\n"
+"Project-Id-Version: Git Updater - Federation 0.2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/afragen/git-updater-federation/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-01-28T01:14:15+00:00\n"
+"POT-Creation-Date: 2025-01-29T14:43:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: git-updater-federation\n"
@@ -34,11 +34,23 @@ msgstr ""
 msgid "Andy Fragen"
 msgstr ""
 
-#: src/Federation/Repo_List_Table.php:208
+#: src/Federation/Repo_List_Table.php:62
+#: src/Federation/Settings.php:37
+msgid "Federated"
+msgstr ""
+
+#: src/Federation/Repo_List_Table.php:63
+#: src/Federation/Settings.php:38
+msgid "Defederated"
+msgstr ""
+
+#: src/Federation/Repo_List_Table.php:211
+#: src/Federation/Settings.php:183
 msgid "Type"
 msgstr ""
 
-#: src/Federation/Repo_List_Table.php:209
+#: src/Federation/Repo_List_Table.php:212
+#: src/Federation/Settings.php:195
 msgid "URI"
 msgstr ""
 
@@ -54,23 +66,15 @@ msgstr ""
 msgid "Federation List Table"
 msgstr ""
 
-#: src/Federation/Settings.php:124
-#: src/Federation/Settings.php:179
+#: src/Federation/Settings.php:121
+#: src/Federation/Settings.php:176
 msgid "Federation"
 msgstr ""
 
-#: src/Federation/Settings.php:186
-msgid "Federation Type"
-msgstr ""
-
-#: src/Federation/Settings.php:213
-msgid "Federation URI"
-msgstr ""
-
-#: src/Federation/Settings.php:220
+#: src/Federation/Settings.php:202
 msgid "Ensure proper URI for federated Update API server."
 msgstr ""
 
-#: src/Federation/Settings.php:277
+#: src/Federation/Settings.php:230
 msgid "Add URI for Git Updater Update API Servers for federation here."
 msgstr ""
