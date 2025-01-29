@@ -453,4 +453,20 @@ class Repo_List_Table extends \WP_List_Table {
 		echo '</form>';
 		echo '</div>';
 	}
+
+	/**
+	 * Gets a list of CSS classes for the table tag.
+	 *
+	 * @return string[] Array of CSS classes for the table tag.
+	 */
+	protected function get_table_classes() {
+		$table_classes = parent::get_table_classes();
+		$fixed_pos     = array_search( 'fixed', $table_classes, true );
+
+		if ( false !== $fixed_pos ) {
+			unset( $table_classes[ $fixed_pos ] );
+		}
+
+		return $table_classes;
+	}
 }
