@@ -91,10 +91,6 @@ class Settings {
 			$new_options = $this->sanitize( $new_options );
 
 			foreach ( $options as $option ) {
-				// $is_plugin_slug = preg_match( '@/@', $new_options[0]['slug'] );
-				// $type_plugin    = \preg_match( '/plugin/', $new_options[0]['type'] );
-				// $bad_input      = $type_plugin && ! $is_plugin_slug;
-				// $bad_input      = ! $bad_input ? ! $type_plugin && $is_plugin_slug : $bad_input;
 				$bad_input = $bad_input || empty( $new_options[0]['uri'] );
 				$duplicate = in_array( $new_options[0]['ID'], $option, true );
 				if ( $duplicate || $bad_input ) {
@@ -194,21 +190,6 @@ class Settings {
 			]
 		);
 
-		/*
-		add_settings_field(
-			'slug',
-			esc_html__( 'Repository Slug', 'git-updater-federation' ),
-			[ $this, 'callback_field' ],
-			'git_updater_federation',
-			'git_updater_federation',
-			[
-				'id'          => 'git_updater_additions_slug',
-				'setting'     => 'slug',
-				'title'       => __( 'Ensure proper slug for plugin or theme.', 'git-updater-federation' ),
-				'placeholder' => 'plugin-slug/plugin-slug.php',
-			]
-		); */
-
 		add_settings_field(
 			'uri',
 			esc_html__( 'URI', 'git-updater-federation' ),
@@ -221,35 +202,6 @@ class Settings {
 				'title'   => __( 'Ensure proper URI for federated Update API server.', 'git-updater-federation' ),
 			]
 		);
-
-		/*
-		add_settings_field(
-			'primary_branch',
-			esc_html__( 'Primary Branch', 'git-updater-federation' ),
-			[ $this, 'callback_field' ],
-			'git_updater_additions',
-			'git_updater_additions',
-			[
-				'id'          => 'git_updater_additions_primary_branch',
-				'setting'     => 'primary_branch',
-				'title'       => __( 'Ensure proper primary branch, default is `master`', 'git-updater-federation' ),
-				'placeholder' => 'master',
-			]
-		); */
-
-		/*
-		add_settings_field(
-			'release_asset',
-			esc_html__( 'Release Asset', 'git-updater-federation' ),
-			[ $this, 'callback_checkbox' ],
-			'git_updater_additions',
-			'git_updater_additions',
-			[
-				'id'      => 'git_updater_additions_release_asset',
-				'setting' => 'release_asset',
-				'title'   => __( 'Check if a release asset is required.', 'git-updater-federation' ),
-			]
-		); */
 	}
 
 	/**
@@ -325,20 +277,4 @@ class Settings {
 		</label>
 		<?php
 	}
-
-	/**
-	 * Get the settings option array and print one of its values.
-	 *
-	 * @param array $args Callback args.
-	 */
-	/*
-	public function callback_checkbox( $args ) {
-		$checked = self::$options_federation[ $args['id'] ] ?? null;
-		?>
-		<label for="<?php echo esc_attr( $args['id'] ); ?>">
-			<input type="checkbox" id="<?php echo esc_attr( $args['id'] ); ?>" name="git_updater_federation[<?php echo esc_attr( $args['setting'] ); ?>]" value="1" <?php checked( 1, intval( $checked ), true ); ?> <?php disabled( '-1', $checked, true ); ?> >
-			<?php echo esc_attr( $args['title'] ); ?>
-		</label>
-		<?php
-	} */
 }
