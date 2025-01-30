@@ -53,6 +53,8 @@ class Bootstrap {
 	 */
 	public function run() {
 		( new Settings() )->load_hooks();
-		( new Federation() )->run();
+		// add_action('plugins_loaded', function(){
+		// ( new Federation() )->load_hooks();
+		// });
 	}
 }

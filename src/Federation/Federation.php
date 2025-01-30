@@ -52,6 +52,7 @@ class Federation {
 	 * @return void
 	 */
 	public function run() {
+		$additions = [];
 		foreach ( self::$options as $option ) {
 			if ( 'Federated' === $option['type'] ) {
 				$additions      = $this->get_additions_data( $option['uri'] );
@@ -64,8 +65,35 @@ class Federation {
 				continue;
 			}
 		}
-		$this->federate();
-		$this->defederate();
+		self::$additions = array_merge( self::$additions, $additions );
+		self::$additions = array_map( 'unserialize', array_unique( array_map( 'serialize', self::$additions ) ) );
+
+		// $this->federate();
+		// $this->defederate();
+	}
+
+	public function load_additions( $listing, $repos, $type ) {
+		$this->run();
+		$my_additions = self::$additions;
+		$config       = get_site_option( 'git_updater_additions', [] );
+		foreach ( self::$additions as $key => $addition ) {
+			if ( ! str_contains( $addition['type'], $type ) ) {
+				unset( $my_additions[ $key ] );
+			}
+		}
+		foreach ( $config as $key => $addition ) {
+			if ( ! str_contains( $addition['type'], $type ) ) {
+				unset( $config[ $key ] );
+			}
+		}
+
+		$config = array_merge( $config, $my_additions );
+		$config = array_map( 'unserialize', array_unique( array_map( 'serialize', $config ) ) );
+		$this->set_repo_cache( "git_updater_repository_add_{$type}", $config, "git_updater_repository_add_{$type}" );
+		$additions = new \Fragen\Git_Updater\Additions\Additions();
+		$additions->register( $config, $repos, $type );
+
+		return $additions->add_to_git_updater;
 	}
 
 	/**
