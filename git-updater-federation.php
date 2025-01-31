@@ -48,7 +48,7 @@ add_action(
 
 add_filter(
 	'gu_additions',
-	function ( $listing, $repos, $type ) {
+	static function ( $listing, $repos, $type ) {
 		return ( new Federation() )->load_additions( $listing, $repos, $type );
 	},
 	10,
