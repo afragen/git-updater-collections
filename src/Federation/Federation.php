@@ -29,12 +29,6 @@ class Federation {
 	protected static $options;
 
 	/** @var array */
-	protected static $federate = [];
-
-	/** @var array */
-	protected static $defederate = [];
-
-	/** @var array */
 	protected $response;
 	// phpcs:enable
 
@@ -56,20 +50,15 @@ class Federation {
 		foreach ( self::$options as $option ) {
 			if ( 'Federated' === $option['type'] ) {
 				$additions = $this->get_additions_data( $option['uri'] );
-				// self::$federate = array_merge( self::$federate, $additions );
 				continue;
 			}
 			if ( 'Defederated' === $option['type'] ) {
 				$additions = $this->get_additions_data( $option['uri'] );
-				// self::$defederate = array_merge( self::$defederate, $additions );
 				continue;
 			}
 		}
 		self::$additions = array_merge( self::$additions, $additions );
 		self::$additions = array_map( 'unserialize', array_unique( array_map( 'serialize', self::$additions ) ) );
-
-		// $this->federate();
-		// $this->defederate();
 	}
 
 	public function load_additions( $listing, $repos, $type ) {
@@ -119,52 +108,13 @@ class Federation {
 		return (array) $response;
 	}
 
-	/**
-	 * Remove repositories from defederated servers.
-	 *
-	 * @return void
-	 */
-	/*
-	protected function defederate() {
-		$modified = false;
-		foreach ( self::$additions as $key => $addition ) {
-			foreach ( self::$defederate as $defederate ) {
-				if ( ! isset( $defederate['source'] ) ) {
-					break;
-				}
-				if ( $addition['source'] === $defederate['source'] && $addition['ID'] === $defederate['ID'] ) {
-					unset( self::$additions[ $key ] );
-					$modified = true;
-					break;
-				}
-			}
+	public function blast_cache_on_delete( $uri_hash ) {
+		$options = get_site_option( 'git_updater_federation' );
+		foreach ( $options as $option ) {
+			if ( $uri_hash === $option['ID'] ) {
+					$this->set_repo_cache( $option['uri'], false, $option['uri'] );
+					$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
+					$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );	}
 		}
-		if ( $modified ) {
-			update_site_option( 'git_updater_additions', self::$additions );
-		}
-	} */
-
-	/**
-	 * Add repositories from federated servers.
-	 *
-	 * @return void
-	 */
-	/*
-	protected function federate() {
-		foreach ( self::$additions as $addition ) {
-			foreach ( self::$federate as $key => $federate ) {
-				if ( ! isset( $federate['source'] ) ) {
-					break;
-				}
-				if ( $addition['ID'] === $federate['ID'] ) {
-					unset( self::$federate[ $key ] );
-					break;
-				}
-			}
-		}
-		if ( ! empty( self::$federate ) ) {
-			self::$additions = array_merge( self::$additions, self::$federate );
-			update_site_option( 'git_updater_additions', self::$additions );
-		}
-	} */
+	}
 }
