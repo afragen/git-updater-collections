@@ -55,13 +55,13 @@ class Federation {
 		$additions = [];
 		foreach ( self::$options as $option ) {
 			if ( 'Federated' === $option['type'] ) {
-				$additions      = $this->get_additions_data( $option['uri'] );
-				self::$federate = array_merge( self::$federate, $additions );
+				$additions = $this->get_additions_data( $option['uri'] );
+				// self::$federate = array_merge( self::$federate, $additions );
 				continue;
 			}
 			if ( 'Defederated' === $option['type'] ) {
-				$additions        = $this->get_additions_data( $option['uri'] );
-				self::$defederate = array_merge( self::$defederate, $additions );
+				$additions = $this->get_additions_data( $option['uri'] );
+				// self::$defederate = array_merge( self::$defederate, $additions );
 				continue;
 			}
 		}
@@ -124,6 +124,7 @@ class Federation {
 	 *
 	 * @return void
 	 */
+	/*
 	protected function defederate() {
 		$modified = false;
 		foreach ( self::$additions as $key => $addition ) {
@@ -141,13 +142,14 @@ class Federation {
 		if ( $modified ) {
 			update_site_option( 'git_updater_additions', self::$additions );
 		}
-	}
+	} */
 
 	/**
 	 * Add repositories from federated servers.
 	 *
 	 * @return void
 	 */
+	/*
 	protected function federate() {
 		foreach ( self::$additions as $addition ) {
 			foreach ( self::$federate as $key => $federate ) {
@@ -164,5 +166,5 @@ class Federation {
 			self::$additions = array_merge( self::$additions, self::$federate );
 			update_site_option( 'git_updater_additions', self::$additions );
 		}
-	}
+	} */
 }
