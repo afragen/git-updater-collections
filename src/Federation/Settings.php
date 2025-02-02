@@ -34,8 +34,8 @@ class Settings {
 	public function __construct() {
 		$this->load_options();
 		self::$federation_types = [
-			'federate'   => __( 'Federated', 'git-updater-federation' ),
-			'defederate' => __( 'Defederated', 'git-updater-federation' ),
+			'listing' => __( 'Listing', 'git-updater-federation' ),
+			// 'defederate' => __( 'Defederated', 'git-updater-federation' ),
 		];
 	}
 
@@ -118,7 +118,7 @@ class Settings {
 	 * Adds Federation tab to Settings page.
 	 */
 	public function add_settings_tabs() {
-		$install_tabs = [ 'git_updater_federation' => esc_html__( 'Federation', 'git-updater-federation' ) ];
+		$install_tabs = [ 'git_updater_federation' => esc_html__( 'Repository Listing', 'git-updater-federation' ) ];
 		add_filter(
 			'gu_add_settings_tabs',
 			function ( $tabs ) use ( $install_tabs ) {
@@ -173,7 +173,7 @@ class Settings {
 
 		add_settings_section(
 			'git_updater_federation',
-			esc_html__( 'Federation', 'git-updater-federation' ),
+			esc_html__( 'Repository Listing', 'git-updater-federation' ),
 			[ $this, 'print_section_federation' ],
 			'git_updater_federation'
 		);
@@ -227,7 +227,7 @@ class Settings {
 	 */
 	public function print_section_federation() {
 		echo '<p>';
-		esc_html_e( 'Add URI for Git Updater Update API Servers for federation here.', 'git-updater-federation' );
+		esc_html_e( 'Add URI for Git Updater Update API Servers for listing here.', 'git-updater-federation' );
 		echo '</p>';
 	}
 

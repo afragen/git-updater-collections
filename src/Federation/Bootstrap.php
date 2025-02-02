@@ -53,6 +53,6 @@ class Bootstrap {
 	 */
 	public function run() {
 		( new Settings() )->load_hooks();
-		( new Federation() )->run();
+		register_deactivation_hook( $this->file, [ new Federation(), 'blast_cache_on_deactivate' ] );
 	}
 }

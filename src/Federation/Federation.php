@@ -10,6 +10,8 @@
 
 namespace Fragen\Git_Updater\Federation;
 
+use Fragen\Git_Updater\Additions\Additions;
+
 /**
  * Class Federation
  *
@@ -29,12 +31,6 @@ class Federation {
 	protected static $options;
 
 	/** @var array */
-	protected static $federate = [];
-
-	/** @var array */
-	protected static $defederate = [];
-
-	/** @var array */
 	protected $response;
 	// phpcs:enable
 
@@ -51,21 +47,67 @@ class Federation {
 	 *
 	 * @return void
 	 */
-	public function run() {
+	public function run( $type ) {
+		$additions = [];
 		foreach ( self::$options as $option ) {
-			if ( 'Federated' === $option['type'] ) {
-				$additions      = $this->get_additions_data( $option['uri'] );
-				self::$federate = array_merge( self::$federate, $additions );
-				continue;
-			}
-			if ( 'Defederated' === $option['type'] ) {
-				$additions        = $this->get_additions_data( $option['uri'] );
-				self::$defederate = array_merge( self::$defederate, $additions );
+			if ( 'Listing' === $option['type'] ) {
+				$listing   = [];
+				$listing   = $this->get_additions_data( $option['uri'] );
+				$additions = array_merge( $additions, $listing );
 				continue;
 			}
 		}
-		$this->federate();
-		$this->defederate();
+		$this->set_repo_cache( "git_updater_repository_add_{$type}", $additions, "git_updater_repository_add_{$type}" );
+		self::$additions = array_merge( self::$additions, $additions );
+		self::$additions = array_map( 'unserialize', array_unique( array_map( 'serialize', self::$additions ) ) );
+	}
+
+	/**
+	 * Load addtions from gu_addtions hook.
+	 *
+	 * @param array  $listing Array of previous additions.
+	 * @param array  $repos   Repository listing.
+	 * @param string $type    (plugin|theme).
+	 *
+	 * @return array
+	 */
+	public function load_additions( $listing, $repos, $type ) {
+		$this->run( $type );
+		$config    = $this->get_additions_cache( $type );
+		$additions = new Additions();
+		$additions->register( $config, $repos, $type );
+
+		return $additions->add_to_git_updater;
+	}
+
+	/**
+	 * Get repository additions cache.
+	 *
+	 * @param string $type (plugin|theme).
+	 *
+	 * @return array
+	 */
+	public function get_additions_cache( $type ) {
+		$my_additions  = self::$additions;
+		$additions_obj = new Additions();
+		$config        = $this->get_repo_cache( "git_updater_repository_add_{$type}" );
+		$config        = $config ? $config[ "git_updater_repository_add_{$type}" ] : $config;
+
+		if ( ! $config ) {
+			$config = get_site_option( 'git_updater_additions', [] );
+			$config = array_merge( $config, $my_additions );
+			foreach ( $config as $key => $addition ) {
+				if ( ! str_contains( $addition['type'], $type ) ) {
+					unset( $config[ $key ] );
+				}
+			}
+			$config = $additions_obj->deduplicate( $config );
+			$this->set_repo_cache( "git_updater_repository_add_{$type}", $config, "git_updater_repository_add_{$type}" );
+		}
+		$config = array_merge( $config, $my_additions );
+		$config = $additions_obj->deduplicate( $config );
+
+		return $config;
 	}
 
 	/**
@@ -92,49 +134,29 @@ class Federation {
 	}
 
 	/**
-	 * Remove repositories from defederated servers.
+	 * Empty caches on listing removal.
+	 *
+	 * @param string $uri_hash
 	 *
 	 * @return void
 	 */
-	protected function defederate() {
-		$modified = false;
-		foreach ( self::$additions as $key => $addition ) {
-			foreach ( self::$defederate as $defederate ) {
-				if ( ! isset( $defederate['source'] ) ) {
-					break;
-				}
-				if ( $addition['source'] === $defederate['source'] && $addition['ID'] === $defederate['ID'] ) {
-					unset( self::$additions[ $key ] );
-					$modified = true;
-					break;
-				}
-			}
-		}
-		if ( $modified ) {
-			update_site_option( 'git_updater_additions', self::$additions );
+	public function blast_cache_on_delete( $uri_hash ) {
+		$options = get_site_option( 'git_updater_federation' );
+		foreach ( $options as $option ) {
+			if ( $uri_hash === $option['ID'] ) {
+					$this->set_repo_cache( $option['uri'], false, $option['uri'] );
+					$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
+					$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' ); }
 		}
 	}
 
 	/**
-	 * Add repositories from federated servers.
+	 * Blast caches on deactivation.
 	 *
 	 * @return void
 	 */
-	protected function federate() {
-		foreach ( self::$additions as $addition ) {
-			foreach ( self::$federate as $key => $federate ) {
-				if ( ! isset( $federate['source'] ) ) {
-					break;
-				}
-				if ( $addition['ID'] === $federate['ID'] ) {
-					unset( self::$federate[ $key ] );
-					break;
-				}
-			}
-		}
-		if ( ! empty( self::$federate ) ) {
-			self::$additions = array_merge( self::$additions, self::$federate );
-			update_site_option( 'git_updater_additions', self::$additions );
-		}
+	public function blast_cache_on_deactivate() {
+		$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
+		$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
 	}
 }

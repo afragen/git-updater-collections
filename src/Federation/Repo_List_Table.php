@@ -59,19 +59,18 @@ class Repo_List_Table extends \WP_List_Table {
 		global $status, $page;
 
 		self::$types = [
-			'federate'   => __( 'Federated', 'git-updater-federation' ),
-			'defederate' => __( 'Defederated', 'git-updater-federation' ),
+			'listing' => __( 'Listing', 'git-updater-federation' ),
 		];
 
 		$examples = [
 			[
 				'ID'   => md5( 'https://git-updater.com' ),
-				'type' => self::$types['federate'],
+				'type' => self::$types['listing'],
 				'uri'  => 'https://git-updater.com',
 			],
 			[
 				'ID'   => md5( 'https://thefragens.net' ),
-				'type' => self::$types['federate'],
+				'type' => self::$types['listing'],
 				'uri'  => 'https://thefragens.net',
 			],
 		];
@@ -231,8 +230,8 @@ class Repo_List_Table extends \WP_List_Table {
 	 **************************************************************************/
 	public function get_sortable_columns() {
 		$sortable_columns = [
-			'uri'  => [ 'uri', true ],     // true means it's already sorted.
-			'type' => [ 'type', true ],
+			'uri' => [ 'uri', true ],     // true means it's already sorted.
+			// 'type' => [ 'type', false ],
 		];
 
 		return $sortable_columns;
@@ -279,6 +278,7 @@ class Repo_List_Table extends \WP_List_Table {
 		foreach ( $uris as $uri ) {
 			foreach ( self::$options as $key => $option ) {
 				if ( in_array( $uri, $option, true ) ) {
+					( new Federation() )->blast_cache_on_delete( $uri );
 					unset( self::$options[ $key ] );
 					update_site_option( 'git_updater_federation', self::$options );
 				}
@@ -437,7 +437,7 @@ class Repo_List_Table extends \WP_List_Table {
 		// Fetch, prepare, sort, and filter our data...
 		$this->prepare_items();
 		echo '<div class="wrap">';
-		echo '<h2>' . esc_html__( 'Federation List Table', 'git-updater-federation' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Update Repository List Table', 'git-updater-federation' ) . '</h2>';
 
 		// Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions.
 		echo '<form id="sites-list" method="get">';
