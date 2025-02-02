@@ -149,4 +149,14 @@ class Federation {
 					$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' ); }
 		}
 	}
+
+	/**
+	 * Blast caches on deactivation.
+	 *
+	 * @return void
+	 */
+	public function blast_cache_on_deactivate() {
+		$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
+		$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
+	}
 }
