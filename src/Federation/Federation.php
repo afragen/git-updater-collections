@@ -45,15 +45,17 @@ class Federation {
 	/**
 	 * Start it up.
 	 *
+	 * @param string $type (plugin|theme).
+	 *
 	 * @return void
 	 */
 	public function run( $type ) {
 		$additions = [];
 		foreach ( self::$options as $option ) {
-				$listing   = [];
-				$listing   = $this->get_additions_data( $option['uri'] );
-				$additions = array_merge( $additions, $listing );
-				continue;
+			$listing   = [];
+			$listing   = $this->get_additions_data( $option['uri'] );
+			$additions = array_merge( $additions, $listing );
+			continue;
 		}
 		$this->set_repo_cache( "git_updater_repository_add_{$type}", $additions, "git_updater_repository_add_{$type}" );
 		self::$additions = array_merge( self::$additions, $additions );
@@ -134,7 +136,7 @@ class Federation {
 	/**
 	 * Empty caches on listing removal.
 	 *
-	 * @param string $uri_hash
+	 * @param string $uri_hash MD5 hash of URI.
 	 *
 	 * @return void
 	 */
