@@ -76,8 +76,8 @@ class Repo_List_Table extends \WP_List_Table {
 		];
 		// self::$examples = $examples;
 		foreach ( (array) $options as $key => $option ) {
-			$option['ID']    = $option['ID'] ?: null;
-			$option['type']  = $option['type'] ?: null;
+			$option['ID'] = $option['ID'] ?: null;
+			// $option['type']  = $option['type'] ?: null;
 			$option['uri']   = $option['uri'] ?: null;
 			$options[ $key ] = $option;
 		}
