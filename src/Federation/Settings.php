@@ -178,17 +178,17 @@ class Settings {
 			'git_updater_federation'
 		);
 
-		add_settings_field(
-			'type',
-			esc_html__( 'Type', 'git-updater-federation' ),
-			[ $this, 'callback_dropdown' ],
-			'git_updater_federation',
-			'git_updater_federation',
-			[
-				'id'      => 'git_updater_federation_type',
-				'setting' => 'type',
-			]
-		);
+		// add_settings_field(
+		// 'type',
+		// esc_html__( 'Type', 'git-updater-federation' ),
+		// [ $this, 'callback_dropdown' ],
+		// 'git_updater_federation',
+		// 'git_updater_federation',
+		// [
+		// 'id'      => 'git_updater_federation_type',
+		// 'setting' => 'type',
+		// ]
+		// );
 
 		add_settings_field(
 			'uri',

@@ -50,12 +50,10 @@ class Federation {
 	public function run( $type ) {
 		$additions = [];
 		foreach ( self::$options as $option ) {
-			if ( 'Listing' === $option['type'] ) {
 				$listing   = [];
 				$listing   = $this->get_additions_data( $option['uri'] );
 				$additions = array_merge( $additions, $listing );
 				continue;
-			}
 		}
 		$this->set_repo_cache( "git_updater_repository_add_{$type}", $additions, "git_updater_repository_add_{$type}" );
 		self::$additions = array_merge( self::$additions, $additions );
