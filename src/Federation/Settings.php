@@ -118,7 +118,7 @@ class Settings {
 	 * Adds Federation tab to Settings page.
 	 */
 	public function add_settings_tabs() {
-		$install_tabs = [ 'git_updater_federation' => esc_html__( 'Repository Listing', 'git-updater-federation' ) ];
+		$install_tabs = [ 'git_updater_federation' => esc_html__( 'API Server Listing', 'git-updater-federation' ) ];
 		add_filter(
 			'gu_add_settings_tabs',
 			function ( $tabs ) use ( $install_tabs ) {
@@ -173,7 +173,7 @@ class Settings {
 
 		add_settings_section(
 			'git_updater_federation',
-			esc_html__( 'Repository Listing', 'git-updater-federation' ),
+			esc_html__( 'Update API Server Listing', 'git-updater-federation' ),
 			[ $this, 'print_section_federation' ],
 			'git_updater_federation'
 		);
@@ -199,7 +199,7 @@ class Settings {
 			[
 				'id'      => 'git_updater_federation_uri',
 				'setting' => 'uri',
-				'title'   => __( 'Ensure proper URI for federated Update API server.', 'git-updater-federation' ),
+				'title'   => __( 'Ensure proper URI for Update API Server.', 'git-updater-federation' ),
 			]
 		);
 	}
