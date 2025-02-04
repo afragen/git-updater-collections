@@ -151,12 +151,13 @@ class Federation {
 	}
 
 	/**
-	 * Blast caches on deactivation.
+	 * Blast caches.
 	 *
 	 * @return void
 	 */
-	public function blast_cache_on_deactivate() {
+	public function blast_cache() {
 		$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
 		$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
+		self::$additions = [];
 	}
 }
