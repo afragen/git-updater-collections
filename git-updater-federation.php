@@ -13,7 +13,7 @@
  * Plugin Name:       Git Updater - Federation
  * Plugin URI:        https://github.com/afragen/git-updater-federation
  * Description:       Federate with other Git Updater Update API servers.
- * Version:           0.3.0
+ * Version:           0.3.1
  * Author:            Andy Fragen
  * License:           MIT
  * Network:           true
