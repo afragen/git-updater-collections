@@ -143,10 +143,17 @@ class Federation {
 		$options = get_site_option( 'git_updater_federation' );
 		foreach ( $options as $option ) {
 			if ( $uri_hash === $option['ID'] ) {
-					$this->set_repo_cache( $option['uri'], false, $option['uri'] );
-					$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
-					$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' ); }
+				$this->set_repo_cache( $option['uri'], false, $option['uri'] );
+				$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
+				$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
+			}
+			foreach ( self::$additions as $key => $addition ) {
+				if ( $addition['source'] === $uri_hash ) {
+					unset( self::$additions[ $key ] );
+				}
+			}
 		}
+		update_site_option( 'git_updater_additions', self::$additions );
 	}
 
 	/**
