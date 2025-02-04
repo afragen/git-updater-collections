@@ -31,6 +31,9 @@ class Federation {
 	protected static $options;
 
 	/** @var array */
+	protected static $listings = [];
+
+	/** @var array */
 	protected $response;
 	// phpcs:enable
 
@@ -52,14 +55,26 @@ class Federation {
 	public function run( $type ) {
 		$additions = [];
 		foreach ( self::$options as $option ) {
-			$listing   = [];
-			$listing   = $this->get_additions_data( $option['uri'] );
-			$additions = array_merge( $additions, $listing );
+			$listing        = [];
+			$listing        = $this->get_additions_data( $option['uri'] );
+			$additions      = array_merge( $additions, $listing );
+			self::$listings = array_merge( self::$listings, $additions );
 			continue;
 		}
+
+		$additions = array_filter(
+			$additions,
+			function ( $item ) use ( $type ) {
+				return str_contains( $item['type'], $type );
+			}
+		);
+
 		$this->set_repo_cache( "git_updater_repository_add_{$type}", $additions, "git_updater_repository_add_{$type}" );
+
 		self::$additions = array_merge( self::$additions, $additions );
 		self::$additions = array_map( 'unserialize', array_unique( array_map( 'serialize', self::$additions ) ) );
+
+		$this->listings();
 	}
 
 	/**
@@ -109,7 +124,7 @@ class Federation {
 	/**
 	 * Get REST API additions data.
 	 *
-	 * @param string $uri URI of federated/defederated server.
+	 * @param string $uri URI of listing server.
 	 *
 	 * @return array
 	 */
@@ -165,5 +180,36 @@ class Federation {
 		$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
 		$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
 		self::$additions = [];
+	}
+
+	/**
+	 * Compile unique listings to site option.
+	 *
+	 * @return void
+	 */
+	protected function listings() {
+		foreach ( self::$options as $repo ) {
+			$add_repo       = $this->get_repo_cache( $repo['uri'] );
+			$add_repo       = $add_repo ? $add_repo[ $repo['uri'] ] : [];
+			self::$listings = array_merge( self::$listings, $add_repo );
+		}
+
+		foreach ( self::$additions as $addition ) {
+			foreach ( self::$listings as $key => $listings ) {
+				if ( ! isset( $listings['source'] ) ) {
+					break;
+				}
+				if ( $addition['ID'] === $listings['ID'] ) {
+					unset( self::$listings[ $key ] );
+					break;
+				}
+			}
+		}
+		self::$listings = ( new Additions() )->deduplicate( self::$listings );
+
+		if ( ! empty( self::$listings ) ) {
+			self::$additions = array_merge( self::$additions, self::$listings );
+			update_site_option( 'git_updater_additions', self::$additions );
+		}
 	}
 }
