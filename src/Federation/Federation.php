@@ -122,7 +122,10 @@ class Federation {
 			if ( 200 !== wp_remote_retrieve_response_code( $response ) || is_wp_error( $response ) ) {
 				return [];
 			}
-			$response = json_decode( wp_remote_retrieve_body( $response ), true );
+			$response = (array) json_decode( wp_remote_retrieve_body( $response ), true );
+			foreach ( array_keys( $response ) as $key ) {
+				$response[ $key ]['source'] = md5( $uri );
+			}
 			$this->set_repo_cache( $uri, (array) $response, $uri, '+3 days' );
 		}
 
