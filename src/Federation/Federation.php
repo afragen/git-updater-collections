@@ -88,23 +88,19 @@ class Federation {
 	 * @return array
 	 */
 	public function get_additions_cache( $type ) {
-		$my_additions  = self::$additions;
 		$additions_obj = new Additions();
 		$config        = $this->get_repo_cache( "git_updater_repository_add_{$type}" );
-		$config        = $config ? $config[ "git_updater_repository_add_{$type}" ] : $config;
+		$config        = $config ? $config[ "git_updater_repository_add_{$type}" ] : [];
+		$config        = array_merge( $config, self::$additions );
 
 		if ( ! $config ) {
 			$config = get_site_option( 'git_updater_additions', [] );
-			$config = array_merge( $config, $my_additions );
 			foreach ( $config as $key => $addition ) {
 				if ( ! str_contains( $addition['type'], $type ) ) {
 					unset( $config[ $key ] );
 				}
 			}
-			$config = $additions_obj->deduplicate( $config );
-			$this->set_repo_cache( "git_updater_repository_add_{$type}", $config, "git_updater_repository_add_{$type}" );
 		}
-		$config = array_merge( $config, $my_additions );
 		$config = $additions_obj->deduplicate( $config );
 
 		return $config;
