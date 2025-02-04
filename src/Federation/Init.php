@@ -86,7 +86,7 @@ class Init {
 		if ( property_exists( $args, 'browse' ) && 'third-party' === $args->browse ) {
 			$response = wp_remote_post( home_url() . '/wp-json/git-updater/v1/update-api-additions/' );
 			if ( 200 !== wp_remote_retrieve_response_code( $response ) || is_wp_error( $response ) ) {
-				return [];
+				return $res;
 			}
 			$response     = json_decode( wp_remote_retrieve_body( $response ), true );
 			$response     = array_filter(
