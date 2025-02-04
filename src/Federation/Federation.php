@@ -31,6 +31,9 @@ class Federation {
 	protected static $options;
 
 	/** @var array */
+	protected static $listings = [];
+
+	/** @var array */
 	protected $response;
 	// phpcs:enable
 
@@ -45,21 +48,33 @@ class Federation {
 	/**
 	 * Start it up.
 	 *
+	 * @param string $type (plugin|theme).
+	 *
 	 * @return void
 	 */
 	public function run( $type ) {
 		$additions = [];
 		foreach ( self::$options as $option ) {
-			if ( 'Listing' === $option['type'] ) {
-				$listing   = [];
-				$listing   = $this->get_additions_data( $option['uri'] );
-				$additions = array_merge( $additions, $listing );
-				continue;
-			}
+			$listing        = [];
+			$listing        = $this->get_additions_data( $option['uri'] );
+			$additions      = array_merge( $additions, $listing );
+			self::$listings = array_merge( self::$listings, $additions );
+			continue;
 		}
+
+		$additions = array_filter(
+			$additions,
+			function ( $item ) use ( $type ) {
+				return str_contains( $item['type'], $type );
+			}
+		);
+
 		$this->set_repo_cache( "git_updater_repository_add_{$type}", $additions, "git_updater_repository_add_{$type}" );
+
 		self::$additions = array_merge( self::$additions, $additions );
 		self::$additions = array_map( 'unserialize', array_unique( array_map( 'serialize', self::$additions ) ) );
+
+		$this->listings();
 	}
 
 	/**
@@ -88,23 +103,19 @@ class Federation {
 	 * @return array
 	 */
 	public function get_additions_cache( $type ) {
-		$my_additions  = self::$additions;
 		$additions_obj = new Additions();
 		$config        = $this->get_repo_cache( "git_updater_repository_add_{$type}" );
-		$config        = $config ? $config[ "git_updater_repository_add_{$type}" ] : $config;
+		$config        = $config ? $config[ "git_updater_repository_add_{$type}" ] : [];
+		$config        = array_merge( $config, self::$additions );
 
 		if ( ! $config ) {
 			$config = get_site_option( 'git_updater_additions', [] );
-			$config = array_merge( $config, $my_additions );
 			foreach ( $config as $key => $addition ) {
 				if ( ! str_contains( $addition['type'], $type ) ) {
 					unset( $config[ $key ] );
 				}
 			}
-			$config = $additions_obj->deduplicate( $config );
-			$this->set_repo_cache( "git_updater_repository_add_{$type}", $config, "git_updater_repository_add_{$type}" );
 		}
-		$config = array_merge( $config, $my_additions );
 		$config = $additions_obj->deduplicate( $config );
 
 		return $config;
@@ -113,7 +124,7 @@ class Federation {
 	/**
 	 * Get REST API additions data.
 	 *
-	 * @param string $uri URI of federated/defederated server.
+	 * @param string $uri URI of listing server.
 	 *
 	 * @return array
 	 */
@@ -126,7 +137,10 @@ class Federation {
 			if ( 200 !== wp_remote_retrieve_response_code( $response ) || is_wp_error( $response ) ) {
 				return [];
 			}
-			$response = json_decode( wp_remote_retrieve_body( $response ), true );
+			$response = (array) json_decode( wp_remote_retrieve_body( $response ), true );
+			foreach ( array_keys( $response ) as $key ) {
+				$response[ $key ]['source'] = md5( $uri );
+			}
 			$this->set_repo_cache( $uri, (array) $response, $uri, '+3 days' );
 		}
 
@@ -136,7 +150,7 @@ class Federation {
 	/**
 	 * Empty caches on listing removal.
 	 *
-	 * @param string $uri_hash
+	 * @param string $uri_hash MD5 hash of URI.
 	 *
 	 * @return void
 	 */
@@ -144,19 +158,58 @@ class Federation {
 		$options = get_site_option( 'git_updater_federation' );
 		foreach ( $options as $option ) {
 			if ( $uri_hash === $option['ID'] ) {
-					$this->set_repo_cache( $option['uri'], false, $option['uri'] );
-					$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
-					$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' ); }
+				$this->set_repo_cache( $option['uri'], false, $option['uri'] );
+				$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
+				$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
+			}
+			foreach ( self::$additions as $key => $addition ) {
+				if ( $addition['source'] === $uri_hash ) {
+					unset( self::$additions[ $key ] );
+				}
+			}
 		}
+		update_site_option( 'git_updater_additions', self::$additions );
 	}
 
 	/**
-	 * Blast caches on deactivation.
+	 * Blast caches.
 	 *
 	 * @return void
 	 */
-	public function blast_cache_on_deactivate() {
+	public function blast_cache() {
 		$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
 		$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
+		self::$additions = [];
+	}
+
+	/**
+	 * Compile unique listings to site option.
+	 *
+	 * @return void
+	 */
+	protected function listings() {
+		foreach ( self::$options as $repo ) {
+			$add_repo       = $this->get_repo_cache( $repo['uri'] );
+			$add_repo       = $add_repo ? $add_repo[ $repo['uri'] ] : [];
+			self::$listings = array_merge( self::$listings, $add_repo );
+		}
+
+		foreach ( self::$additions as $addition ) {
+			foreach ( self::$listings as $key => $listings ) {
+				if ( ! isset( $listings['source'] ) ) {
+					break;
+				}
+				if ( $addition['ID'] === $listings['ID'] ) {
+					unset( self::$listings[ $key ] );
+					break;
+				}
+			}
+		}
+		self::$listings = ( new Additions() )->deduplicate( self::$listings );
+
+		if ( ! empty( self::$listings ) ) {
+			self::$additions = array_merge( self::$additions, self::$listings );
+			update_site_option( 'git_updater_additions', self::$additions );
+		}
 	}
 }

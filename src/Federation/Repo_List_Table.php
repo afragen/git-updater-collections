@@ -76,8 +76,8 @@ class Repo_List_Table extends \WP_List_Table {
 		];
 		// self::$examples = $examples;
 		foreach ( (array) $options as $key => $option ) {
-			$option['ID']    = $option['ID'] ?: null;
-			$option['type']  = $option['type'] ?: null;
+			$option['ID'] = $option['ID'] ?: null;
+			// $option['type']  = $option['type'] ?: null;
 			$option['uri']   = $option['uri'] ?: null;
 			$options[ $key ] = $option;
 		}
@@ -207,8 +207,8 @@ class Repo_List_Table extends \WP_List_Table {
 	public function get_columns() {
 		$columns = [
 			// 'cb'             => '<input type="checkbox" />', // Render a checkbox instead of text.
-			'type' => esc_html__( 'Type', 'git-updater-federation' ),
-			'uri'  => esc_html__( 'URI', 'git-updater-federation' ),
+			// 'type' => esc_html__( 'Type', 'git-updater-federation' ),
+			'uri' => esc_html__( 'URI', 'git-updater-federation' ),
 		];
 
 		return $columns;
@@ -418,7 +418,7 @@ class Repo_List_Table extends \WP_List_Table {
 	 */
 	public function usort_reorder( $a, $b ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'type'; // If no sort, default to site.
+		$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'uri'; // If no sort, default to site.
 		$order   = ( ! empty( $_REQUEST['order'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'asc'; // If no order, default to asc.
 		// phpcs:enable
 		$result = strcmp( $a[ $orderby ], $b[ $orderby ] ); // Determine sort order.
@@ -437,7 +437,7 @@ class Repo_List_Table extends \WP_List_Table {
 		// Fetch, prepare, sort, and filter our data...
 		$this->prepare_items();
 		echo '<div class="wrap">';
-		echo '<h2>' . esc_html__( 'Update Repository List Table', 'git-updater-federation' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Update API Server List Table', 'git-updater-federation' ) . '</h2>';
 
 		// Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions.
 		echo '<form id="sites-list" method="get">';
