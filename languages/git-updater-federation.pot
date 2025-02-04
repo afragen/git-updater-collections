@@ -2,14 +2,14 @@
 # This file is distributed under the MIT.
 msgid ""
 msgstr ""
-"Project-Id-Version: Git Updater - Federation 0.2.3\n"
+"Project-Id-Version: Git Updater - Federation 0.3.1\n"
 "Report-Msgid-Bugs-To: https://github.com/afragen/git-updater-federation/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-02T16:38:16+00:00\n"
+"POT-Creation-Date: 2025-02-04T22:12:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: git-updater-federation\n"
@@ -34,14 +34,18 @@ msgstr ""
 msgid "Andy Fragen"
 msgstr ""
 
+#: src/Federation/Init.php:42
+msgid "These suggestions are based on Git Updater API servers."
+msgstr ""
+
+#: src/Federation/Init.php:55
+msgctxt "Plugin Installer"
+msgid "Third Party"
+msgstr ""
+
 #: src/Federation/Repo_List_Table.php:62
 #: src/Federation/Settings.php:37
 msgid "Listing"
-msgstr ""
-
-#: src/Federation/Repo_List_Table.php:210
-#: src/Federation/Settings.php:183
-msgid "Type"
 msgstr ""
 
 #: src/Federation/Repo_List_Table.php:211
@@ -58,16 +62,19 @@ msgid "Items would go to edit when we write that code."
 msgstr ""
 
 #: src/Federation/Repo_List_Table.php:440
-msgid "Update Repository List Table"
+msgid "Update API Server List Table"
 msgstr ""
 
 #: src/Federation/Settings.php:121
+msgid "API Server Listing"
+msgstr ""
+
 #: src/Federation/Settings.php:176
-msgid "Repository Listing"
+msgid "Update API Server Listing"
 msgstr ""
 
 #: src/Federation/Settings.php:202
-msgid "Ensure proper URI for federated Update API server."
+msgid "Ensure proper URI for Update API Server."
 msgstr ""
 
 #: src/Federation/Settings.php:230
