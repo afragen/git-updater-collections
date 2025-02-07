@@ -8,34 +8,33 @@
  * @package   git-updater
  */
 
-namespace Fragen\Git_Updater\Federation;
+namespace Fragen\Git_Updater\Collections;
 
 /**
  * Class Settings
  */
 class Settings {
 	/**
-	 * Holds the values for federation settings.
+	 * Holds the values for collections settings.
 	 *
 	 * @var array $option_remote
 	 */
-	public static $options_federation;
+	public static $options_collections;
 
 	/**
 	 * Supported types.
 	 *
 	 * @var array $addition_types
 	 */
-	public static $federation_types = [];
+	public static $collections_types = [];
 
 	/**
 	 * Settings constructor.
 	 */
 	public function __construct() {
 		$this->load_options();
-		self::$federation_types = [
-			'listing' => __( 'Listing', 'git-updater-federation' ),
-			// 'defederate' => __( 'Defederated', 'git-updater-federation' ),
+		self::$collections_types = [
+			'collection' => __( 'Collection', 'git-updater-collections' ),
 		];
 	}
 
@@ -43,7 +42,7 @@ class Settings {
 	 * Load site options.
 	 */
 	private function load_options() {
-		self::$options_federation = get_site_option( 'git_updater_federation', [] );
+		self::$options_collections = get_site_option( 'git_updater_collections', [] );
 		$this->add_settings_tabs();
 	}
 
@@ -69,7 +68,7 @@ class Settings {
 	}
 
 	/**
-	 * Save Federation settings.
+	 * Save Collections settings.
 	 *
 	 * @uses 'gu_update_settings' action hook
 	 * @uses 'gu_save_redirect' filter hook
@@ -77,16 +76,16 @@ class Settings {
 	 * @param array $post_data $_POST data.
 	 */
 	public function save_settings( $post_data ) {
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'git_updater_federation-options' ) ) {
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'git_updater_collections-options' ) ) {
 			return;
 		}
-		$options   = (array) get_site_option( 'git_updater_federation', [] );
+		$options   = (array) get_site_option( 'git_updater_collections', [] );
 		$duplicate = false;
 		$bad_input = false;
 		if ( isset( $post_data['option_page'] ) &&
-			'git_updater_federation' === $post_data['option_page']
+			'git_updater_collections' === $post_data['option_page']
 		) {
-			$new_options = $post_data['git_updater_federation'] ?? [];
+			$new_options = $post_data['git_updater_collections'] ?? [];
 
 			$new_options = $this->sanitize( $new_options );
 
@@ -102,23 +101,23 @@ class Settings {
 			if ( ! $duplicate && ! $bad_input ) {
 				$options = array_merge( $options, $new_options );
 				$options = array_filter( $options );
-				update_site_option( 'git_updater_federation', $options );
+				update_site_option( 'git_updater_collections', $options );
 			}
 
 			add_filter(
 				'gu_save_redirect',
 				function ( $option_page ) {
-					return array_merge( $option_page, [ 'git_updater_federation' ] );
+					return array_merge( $option_page, [ 'git_updater_collections' ] );
 				}
 			);
 		}
 	}
 
 	/**
-	 * Adds Federation tab to Settings page.
+	 * Adds Collections tab to Settings page.
 	 */
 	public function add_settings_tabs() {
-		$install_tabs = [ 'git_updater_federation' => esc_html__( 'API Server Listing', 'git-updater-federation' ) ];
+		$install_tabs = [ 'git_updater_collections' => esc_html__( 'Collections', 'git-updater-collections' ) ];
 		add_filter(
 			'gu_add_settings_tabs',
 			function ( $tabs ) use ( $install_tabs ) {
@@ -138,9 +137,9 @@ class Settings {
 	 * @param string $action Form action.
 	 */
 	public function add_admin_page( $tab, $action ) {
-		$this->federation_page_init();
+		$this->collections_page_init();
 
-		if ( 'git_updater_federation' === $tab ) {
+		if ( 'git_updater_collections' === $tab ) {
 			$action = add_query_arg(
 				[
 					'page' => 'git-updater',
@@ -148,12 +147,12 @@ class Settings {
 				],
 				$action
 			);
-			( new Repo_List_Table( self::$options_federation ) )->render_list_table();
+			( new Repo_List_Table( self::$options_collections ) )->render_list_table();
 			?>
 			<form class="settings" method="post" action="<?php echo esc_attr( $action ); ?>">
 				<?php
-				settings_fields( 'git_updater_federation' );
-				do_settings_sections( 'git_updater_federation' );
+				settings_fields( 'git_updater_collections' );
+				do_settings_sections( 'git_updater_collections' );
 				submit_button();
 				?>
 			</form>
@@ -164,42 +163,30 @@ class Settings {
 	/**
 	 * Settings for Additions.
 	 */
-	public function federation_page_init() {
+	public function collections_page_init() {
 		register_setting(
-			'git_updater_federation',
-			'git_updater_federation',
-			null
+			'git_updater_collections',
+			'git_updater_collections',
+			[]
 		);
 
 		add_settings_section(
-			'git_updater_federation',
-			esc_html__( 'Update API Server Listing', 'git-updater-federation' ),
-			[ $this, 'print_section_federation' ],
-			'git_updater_federation'
+			'git_updater_collections',
+			esc_html__( 'Update API Server', 'git-updater-collections' ),
+			[ $this, 'print_section_collections' ],
+			'git_updater_collections'
 		);
-
-		// add_settings_field(
-		// 'type',
-		// esc_html__( 'Type', 'git-updater-federation' ),
-		// [ $this, 'callback_dropdown' ],
-		// 'git_updater_federation',
-		// 'git_updater_federation',
-		// [
-		// 'id'      => 'git_updater_federation_type',
-		// 'setting' => 'type',
-		// ]
-		// );
 
 		add_settings_field(
 			'uri',
-			esc_html__( 'URI', 'git-updater-federation' ),
+			esc_html__( 'URI', 'git-updater-collections' ),
 			[ $this, 'callback_field' ],
-			'git_updater_federation',
-			'git_updater_federation',
+			'git_updater_collections',
+			'git_updater_collections',
 			[
-				'id'      => 'git_updater_federation_uri',
+				'id'      => 'git_updater_collections_uri',
 				'setting' => 'uri',
-				'title'   => __( 'Ensure proper URI for Update API Server.', 'git-updater-federation' ),
+				'title'   => __( 'Ensure proper URI for Update API Server.', 'git-updater-collections' ),
 			]
 		);
 	}
@@ -223,11 +210,11 @@ class Settings {
 	}
 
 	/**
-	 * Print the Federation text.
+	 * Print the Collections text.
 	 */
-	public function print_section_federation() {
+	public function print_section_collections() {
 		echo '<p>';
-		esc_html_e( 'Add URI for Git Updater Update API Servers for listing here.', 'git-updater-federation' );
+		esc_html_e( 'Add URI for Git Updater Update API Servers here.', 'git-updater-collections' );
 		echo '</p>';
 	}
 
@@ -242,7 +229,7 @@ class Settings {
 		$placeholder = $args['placeholder'] ?? null;
 		?>
 		<label for="<?php echo esc_attr( $args['id'] ); ?>">
-			<input type="text" style="width:50%;" id="<?php esc_attr( $args['id'] ); ?>" name="git_updater_federation[<?php echo esc_attr( $args['setting'] ); ?>]" value="" placeholder="<?php echo esc_attr( $placeholder ); ?>">
+			<input type="text" style="width:50%;" id="<?php esc_attr( $args['id'] ); ?>" name="git_updater_collections[<?php echo esc_attr( $args['setting'] ); ?>]" value="" placeholder="<?php echo esc_attr( $placeholder ); ?>">
 			<br>
 			<span class="description">
 				<?php echo esc_attr( $args['title'] ); ?>
@@ -261,9 +248,9 @@ class Settings {
 	public function callback_dropdown( $args ) {
 		?>
 		<label for="<?php echo esc_attr( $args['id'] ); ?>">
-		<select id="<?php echo esc_attr( $args['id'] ); ?>" name="git_updater_federation[<?php echo esc_attr( $args['setting'] ); ?>]">
+		<select id="<?php echo esc_attr( $args['id'] ); ?>" name="git_updater_collections[<?php echo esc_attr( $args['setting'] ); ?>]">
 		<?php
-		foreach ( self::$federation_types as $item ) {
+		foreach ( self::$collections_types as $item ) {
 			printf(
 				'<option value="%s" %s>%s</option>',
 				esc_attr( $item ),

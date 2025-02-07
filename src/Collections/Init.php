@@ -1,14 +1,14 @@
 <?php
 /**
- * Git Updater Federation
+ * Git Updater Collections
  *
  * @author    Andy Fragen
  * @license   MIT
- * @link      https://github.com/afragen/git-updater-federation
- * @package   git-updater-federation
+ * @link      https://github.com/afragen/git-updater-collections
+ * @package   git-updater-collections
  */
 
-namespace Fragen\Git_Updater\Federation;
+namespace Fragen\Git_Updater\Collections;
 
 /*
  * Exit if called directly.
@@ -39,7 +39,7 @@ class Init {
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
 				if ( 'third-party' === $tab ) {
-					echo '<p>' . esc_html__( 'These suggestions are based on Git Updater API servers.', 'git-updater-federation' ) . '</p>';
+					echo '<p>' . esc_html__( 'These suggestions are based on Collections of Git Updater Update API Servers.', 'git-updater-collections' ) . '</p>';
 				}
 			}
 		);
@@ -52,7 +52,7 @@ class Init {
 	 * @return array
 	 */
 	public function add_install_tab( $tabs ) {
-		$tabs['third-party'] = esc_html_x( 'Third Party', 'Plugin Installer', 'git-updater-federation' );
+		$tabs['third-party'] = esc_html_x( 'Third Party', 'Plugin Installer', 'git-updater-collections' );
 
 		return $tabs;
 	}
@@ -86,6 +86,8 @@ class Init {
 		if ( property_exists( $args, 'browse' ) && 'third-party' === $args->browse ) {
 			$response = wp_remote_post( home_url() . '/wp-json/git-updater/v1/update-api-additions/' );
 			if ( 200 !== wp_remote_retrieve_response_code( $response ) || is_wp_error( $response ) ) {
+				$res->info['count'] = 0;
+				$res->plugins       = [];
 				return $res;
 			}
 			$response     = json_decode( wp_remote_retrieve_body( $response ), true );
