@@ -159,6 +159,7 @@ class Collections {
 		foreach ( $options as $option ) {
 			if ( $uri_hash === $option['ID'] ) {
 				$this->set_repo_cache( $option['uri'], false, $option['uri'] );
+				$this->delete_cached_data( $option['ID'] );
 				$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
 				$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
 			}
@@ -168,6 +169,9 @@ class Collections {
 				}
 			}
 		}
+		$this->delete_cached_data( md5( 'plugin' ) );
+		$this->delete_cached_data( md5( 'theme' ) );
+
 		update_site_option( 'git_updater_additions', self::$additions );
 	}
 
@@ -180,6 +184,25 @@ class Collections {
 		foreach ( self::$options as $collection ) {
 			$this->blast_cache_on_delete( $collection['ID'] );
 		}
+	}
+
+	/**
+	 * Delete Collections `ghu-` prefixed data from options table.
+	 *
+	 * @param string $cache_key MD5 hash of cache ID.
+	 *
+	 * @return bool
+	 */
+	public function delete_cached_data( $cache_key ) {
+		global $wpdb;
+
+		$table         = is_multisite() ? $wpdb->base_prefix . 'sitemeta' : $wpdb->base_prefix . 'options';
+		$column        = is_multisite() ? 'meta_key' : 'option_name';
+		$delete_string = 'DELETE FROM ' . $table . ' WHERE ' . $column . ' LIKE %s LIMIT 1000';
+
+		$wpdb->query( $wpdb->prepare( $delete_string, [ "%ghu-{$cache_key}%" ] ) ); // phpcs:ignore
+
+		return true;
 	}
 
 	/**
