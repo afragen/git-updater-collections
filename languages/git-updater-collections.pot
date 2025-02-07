@@ -1,0 +1,85 @@
+# Copyright (C) 2025 Andy Fragen
+# This file is distributed under the MIT.
+msgid ""
+msgstr ""
+"Project-Id-Version: Git Updater - Collections 0.4.0\n"
+"Report-Msgid-Bugs-To: https://github.com/afragen/git-updater-collections/issues\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-02-07T01:21:52+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: git-updater-collections\n"
+
+#. Plugin Name of the plugin
+#: git-updater-collections.php
+msgid "Git Updater - Collections"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: git-updater-collections.php
+msgid "https://github.com/afragen/git-updater-collections"
+msgstr ""
+
+#. Description of the plugin
+#: git-updater-collections.php
+msgid "Federate with other Git Updater Update API servers."
+msgstr ""
+
+#. Author of the plugin
+#: git-updater-collections.php
+msgid "Andy Fragen"
+msgstr ""
+
+#: src/Collections/Init.php:42
+msgid "These suggestions are based on Collections of Git Updater Update API Servers."
+msgstr ""
+
+#: src/Collections/Init.php:55
+msgctxt "Plugin Installer"
+msgid "Third Party"
+msgstr ""
+
+#: src/Collections/Repo_List_Table.php:62
+msgid "Listing"
+msgstr ""
+
+#: src/Collections/Repo_List_Table.php:211
+#: src/Collections/Settings.php:182
+msgid "URI"
+msgstr ""
+
+#: src/Collections/Repo_List_Table.php:256
+msgid "Delete"
+msgstr ""
+
+#: src/Collections/Repo_List_Table.php:288
+msgid "Items would go to edit when we write that code."
+msgstr ""
+
+#: src/Collections/Repo_List_Table.php:440
+msgid "Update API Server Collections List Table"
+msgstr ""
+
+#: src/Collections/Settings.php:37
+msgid "Collection"
+msgstr ""
+
+#: src/Collections/Settings.php:120
+msgid "Collections"
+msgstr ""
+
+#: src/Collections/Settings.php:175
+msgid "Update API Server"
+msgstr ""
+
+#: src/Collections/Settings.php:189
+msgid "Ensure proper URI for Update API Server."
+msgstr ""
+
+#: src/Collections/Settings.php:217
+msgid "Add URI for Git Updater Update API Servers here."
+msgstr ""
