@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => array($vendorDir . '/dealerdirect/phpcodesniffer-composer-installer/src'),
-    'Fragen\\Git_Updater\\Federation\\' => array($baseDir . '/src/Federation'),
+    'Fragen\\Git_Updater\\Collections\\' => array($baseDir . '/src/Collections'),
 );
