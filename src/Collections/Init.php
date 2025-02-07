@@ -138,7 +138,9 @@ class Init {
 	 * @return stdClass
 	 */
 	public function themes_api_result( $res, $action, $args ) {
-		if ( property_exists( $args, 'browse' ) && 'third-party' === $args->browse ) {
+		if ( ( property_exists( $args, 'browse' ) && 'third-party' === $args->browse )
+			|| 'theme_information' === $action
+		) {
 			$response = wp_remote_post( home_url() . '/wp-json/git-updater/v1/update-api-additions/' );
 			if ( 200 !== wp_remote_retrieve_response_code( $response ) || is_wp_error( $response ) ) {
 				$res->info['count'] = 0;
@@ -159,18 +161,24 @@ class Init {
 				function ( $item ) {
 					$item->author      = [ 'display_name' => $item->author ];
 					$item->description = $item->sections->description;
-					$item->preview_url = '';
+					$item->preview_url = $item->preview_url ?? '';
 					return $item;
 				},
 				$response
 			);
+
+			// Required for theme installation.
+			if ( 'theme_information' === $action ) {
+				$res->download_link = $response[ $res->slug ]->download_link;
+				return $res;
+			}
 
 			$res->info   = [
 				'page'    => 1,
 				'pages'   => 1,
 				'results' => count( $response ),
 			];
-			$res->themes = (object) $response; // Make it an object again.
+			$res->themes = array_values( $response ); // Make it an object again.
 		}
 
 		return $res;
