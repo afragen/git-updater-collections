@@ -1,6 +1,6 @@
 {
-  "name": "afragen/git-updater-federation",
-  "description": "Add federation between Git Updater based Update API servers.",
+  "name": "afragen/git-updater-collections",
+  "description": "Add collections between Git Updater based Update API Servers.",
   "type": "wordpress-plugin",
   "license": "MIT",
   "authors": [
@@ -12,8 +12,8 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/afragen/git-updater-federation/issues",
-    "source": "https://github.com/afragen/git-updater-federation"
+    "issues": "https://github.com/afragen/git-updater-collections/issues",
+    "source": "https://github.com/afragen/git-updater-collections"
   },
   "prefer-stable": true,
   "require": {
@@ -29,7 +29,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Fragen\\Git_Updater\\Federation\\": "src/Federation/"
+      "Fragen\\Git_Updater\\Collections\\": "src/Collections/"
     }
   },
   "scripts": {

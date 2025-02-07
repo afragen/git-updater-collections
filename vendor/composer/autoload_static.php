@@ -13,7 +13,7 @@ class ComposerStaticIniteef4aa7655489f570757f39ea701ef5e
         ),
         'F' => 
         array (
-            'Fragen\\Git_Updater\\Federation\\' => 30,
+            'Fragen\\Git_Updater\\Collections\\' => 31,
         ),
     );
 
@@ -22,9 +22,9 @@ class ComposerStaticIniteef4aa7655489f570757f39ea701ef5e
         array (
             0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
         ),
-        'Fragen\\Git_Updater\\Federation\\' => 
+        'Fragen\\Git_Updater\\Collections\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src/Federation',
+            0 => __DIR__ . '/../..' . '/src/Collections',
         ),
     );
 

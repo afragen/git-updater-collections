@@ -1,19 +1,19 @@
 <?php return array(
     'root' => array(
-        'name' => 'afragen/git-updater-federation',
+        'name' => 'afragen/git-updater-collections',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => 'd3b385b9357258ab359c918f1f7e62d8c1a49879',
+        'reference' => '20b292627d7eb82c31e210d9275261c8e112199c',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'afragen/git-updater-federation' => array(
+        'afragen/git-updater-collections' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => 'd3b385b9357258ab359c918f1f7e62d8c1a49879',
+            'reference' => '20b292627d7eb82c31e210d9275261c8e112199c',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

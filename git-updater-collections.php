@@ -1,32 +1,32 @@
 <?php
 /**
- * Git Updater - Federation.
+ * Git Updater - Collections.
  * Requires Git Updater plugin.
  *
- * @package git-updater-federation
+ * @package git-updater-collections
  * @author  Andy Fragen
- * @link    https://github.com/afragen/git-updater-federation
+ * @link    https://github.com/afragen/git-updater-collections
  * @link    https://github.com/afragen/github-updater
  */
 
 /**
- * Plugin Name:       Git Updater - Federation
- * Plugin URI:        https://github.com/afragen/git-updater-federation
+ * Plugin Name:       Git Updater - Collections
+ * Plugin URI:        https://github.com/afragen/git-updater-collections
  * Description:       Federate with other Git Updater Update API servers.
- * Version:           0.3.1
+ * Version:           0.4.0
  * Author:            Andy Fragen
  * License:           MIT
  * Network:           true
  * Domain Path:       /languages
- * Text Domain:       git-updater-federation
- * GitHub Plugin URI: https://github.com/afragen/git-updater-federation
- * xGitHub Languages:  https://github.com/afragen/git-updater-federation-translations
+ * Text Domain:       git-updater-collections
+ * GitHub Plugin URI: https://github.com/afragen/git-updater-collections
+ * xGitHub Languages:  https://github.com/afragen/git-updater-collections-translations
  * Primary Branch:    main
  * Requires at least: 6.6
  * Requires PHP:      8.0
  */
 
-namespace Fragen\Git_Updater\Federation;
+namespace Fragen\Git_Updater\Collections;
 
 /*
  * Exit if called directly.
@@ -49,7 +49,7 @@ add_action(
 add_filter(
 	'gu_additions',
 	static function ( $listing, $repos, $type ) {
-		return ( new Federation() )->load_additions( $listing, $repos, $type );
+		return ( new Collections() )->load_additions( $listing, $repos, $type );
 	},
 	10,
 	3

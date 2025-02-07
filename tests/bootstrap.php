@@ -33,7 +33,7 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_dependencies' );
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
-	require dirname( dirname( __FILE__ ) ) . '/git-updater-federation.php';
+	require dirname( dirname( __FILE__ ) ) . '/git-updater-collections.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 

@@ -10,7 +10,7 @@
  *          Copyright 2015, GPL2
  */
 
-namespace Fragen\Git_Updater\Federation;
+namespace Fragen\Git_Updater\Collections;
 
 /*
  * Exit if called directly.
@@ -44,7 +44,7 @@ class Repo_List_Table extends \WP_List_Table {
 	protected static $examples = [];
 
 	/**
-	 * Holds federation types.
+	 * Holds collections types.
 	 *
 	 * @var array
 	 */
@@ -59,18 +59,18 @@ class Repo_List_Table extends \WP_List_Table {
 		global $status, $page;
 
 		self::$types = [
-			'listing' => __( 'Listing', 'git-updater-federation' ),
+			'collection' => __( 'Listing', 'git-updater-collections' ),
 		];
 
 		$examples = [
 			[
 				'ID'   => md5( 'https://git-updater.com' ),
-				'type' => self::$types['listing'],
+				'type' => self::$types['collection'],
 				'uri'  => 'https://git-updater.com',
 			],
 			[
 				'ID'   => md5( 'https://thefragens.net' ),
-				'type' => self::$types['listing'],
+				'type' => self::$types['collection'],
 				'uri'  => 'https://thefragens.net',
 			],
 		];
@@ -207,8 +207,8 @@ class Repo_List_Table extends \WP_List_Table {
 	public function get_columns() {
 		$columns = [
 			// 'cb'             => '<input type="checkbox" />', // Render a checkbox instead of text.
-			// 'type' => esc_html__( 'Type', 'git-updater-federation' ),
-			'uri' => esc_html__( 'URI', 'git-updater-federation' ),
+			// 'type' => esc_html__( 'Type', 'git-updater-collections' ),
+			'uri' => esc_html__( 'URI', 'git-updater-collections' ),
 		];
 
 		return $columns;
@@ -253,7 +253,7 @@ class Repo_List_Table extends \WP_List_Table {
 	 **************************************************************************/
 	public function get_bulk_actions() {
 		$actions = [
-			'delete' => esc_html__( 'Delete', 'git-updater-federation' ),
+			'delete' => esc_html__( 'Delete', 'git-updater-collections' ),
 		];
 
 		// return $actions;
@@ -278,14 +278,14 @@ class Repo_List_Table extends \WP_List_Table {
 		foreach ( $uris as $uri ) {
 			foreach ( self::$options as $key => $option ) {
 				if ( in_array( $uri, $option, true ) ) {
-					( new Federation() )->blast_cache_on_delete( $uri );
+					( new Collections() )->blast_cache_on_delete( $uri );
 					unset( self::$options[ $key ] );
-					update_site_option( 'git_updater_federation', self::$options );
+					update_site_option( 'git_updater_collections', self::$options );
 				}
 			}
 		}
 		if ( 'edit' === $this->current_action() ) {
-			wp_die( esc_html__( 'Items would go to edit when we write that code.', 'git-updater-federation' ) );
+			wp_die( esc_html__( 'Items would go to edit when we write that code.', 'git-updater-collections' ) );
 		}
 	}
 
@@ -437,7 +437,7 @@ class Repo_List_Table extends \WP_List_Table {
 		// Fetch, prepare, sort, and filter our data...
 		$this->prepare_items();
 		echo '<div class="wrap">';
-		echo '<h2>' . esc_html__( 'Update API Server List Table', 'git-updater-federation' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Update API Server Collections List Table', 'git-updater-collections' ) . '</h2>';
 
 		// Forms are NOT created automatically, so you need to wrap the table in one to use features like bulk actions.
 		echo '<form id="sites-list" method="get">';

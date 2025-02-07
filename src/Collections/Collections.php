@@ -8,16 +8,16 @@
  * @package   git-updater
  */
 
-namespace Fragen\Git_Updater\Federation;
+namespace Fragen\Git_Updater\Collections;
 
 use Fragen\Git_Updater\Additions\Additions;
 
 /**
- * Class Federation
+ * Class Collections
  *
  * Add federated repos and/or remove defederated repos in Git Updater Additions.
  */
-class Federation {
+class Collections {
 	use \Fragen\Git_Updater\Traits\GU_Trait;
 
 	// phpcs:disable Generic.Commenting.DocComment.MissingShort
@@ -31,7 +31,7 @@ class Federation {
 	protected static $options;
 
 	/** @var array */
-	protected static $listings = [];
+	protected static $collections = [];
 
 	/** @var array */
 	protected $response;
@@ -42,7 +42,7 @@ class Federation {
 	 */
 	public function __construct() {
 		self::$additions = get_site_option( 'git_updater_additions', [] );
-		self::$options   = get_site_option( 'git_updater_federation', [] );
+		self::$options   = get_site_option( 'git_updater_collections', [] );
 	}
 
 	/**
@@ -55,10 +55,10 @@ class Federation {
 	public function run( $type ) {
 		$additions = [];
 		foreach ( self::$options as $option ) {
-			$listing        = [];
-			$listing        = $this->get_additions_data( $option['uri'] );
-			$additions      = array_merge( $additions, $listing );
-			self::$listings = array_merge( self::$listings, $additions );
+			$collection        = [];
+			$collection        = $this->get_additions_data( $option['uri'] );
+			$additions         = array_merge( $additions, $collection );
+			self::$collections = array_merge( self::$collections, $additions );
 			continue;
 		}
 
@@ -74,14 +74,14 @@ class Federation {
 		self::$additions = array_merge( self::$additions, $additions );
 		self::$additions = array_map( 'unserialize', array_unique( array_map( 'serialize', self::$additions ) ) );
 
-		$this->listings();
+		$this->unique_packages();
 	}
 
 	/**
-	 * Load addtions from gu_addtions hook.
+	 * Load additions from gu_additions hook.
 	 *
 	 * @param array  $listing Array of previous additions.
-	 * @param array  $repos   Repository listing.
+	 * @param array  $repos   Repository collection.
 	 * @param string $type    (plugin|theme).
 	 *
 	 * @return array
@@ -124,7 +124,7 @@ class Federation {
 	/**
 	 * Get REST API additions data.
 	 *
-	 * @param string $uri URI of listing server.
+	 * @param string $uri URI of collection server.
 	 *
 	 * @return array
 	 */
@@ -148,14 +148,14 @@ class Federation {
 	}
 
 	/**
-	 * Empty caches on listing removal.
+	 * Empty caches on collection removal.
 	 *
 	 * @param string $uri_hash MD5 hash of URI.
 	 *
 	 * @return void
 	 */
 	public function blast_cache_on_delete( $uri_hash ) {
-		$options = get_site_option( 'git_updater_federation' );
+		$options = get_site_option( 'git_updater_collections' );
 		foreach ( $options as $option ) {
 			if ( $uri_hash === $option['ID'] ) {
 				$this->set_repo_cache( $option['uri'], false, $option['uri'] );
@@ -177,39 +177,36 @@ class Federation {
 	 * @return void
 	 */
 	public function blast_cache() {
-		$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
-		$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
-		self::$additions = [];
+		foreach ( self::$options as $collection ) {
+			$this->blast_cache_on_delete( $collection['ID'] );
+		}
 	}
 
 	/**
-	 * Compile unique listings to site option.
+	 * Compile unique collections to site option.
 	 *
 	 * @return void
 	 */
-	protected function listings() {
+	protected function unique_packages() {
 		foreach ( self::$options as $repo ) {
-			$add_repo       = $this->get_repo_cache( $repo['uri'] );
-			$add_repo       = $add_repo ? $add_repo[ $repo['uri'] ] : [];
-			self::$listings = array_merge( self::$listings, $add_repo );
+			$add_repo          = $this->get_repo_cache( $repo['uri'] );
+			$add_repo          = $add_repo ? $add_repo[ $repo['uri'] ] : [];
+			self::$collections = array_merge( self::$collections, $add_repo );
 		}
 
-		foreach ( self::$additions as $addition ) {
-			foreach ( self::$listings as $key => $listings ) {
-				if ( ! isset( $listings['source'] ) ) {
+		foreach ( self::$additions as $key_add => $addition ) {
+			foreach ( self::$collections as $key_col => $collection ) {
+				if ( ! isset( $collection['source'] ) ) {
 					break;
 				}
-				if ( $addition['ID'] === $listings['ID'] ) {
-					unset( self::$listings[ $key ] );
+				if ( $addition['ID'] === $collection['ID'] && $addition['source'] === $collection['source'] ) {
+					unset( self::$collections[ $key_col ], self::$additions[ $key_add ] );
 					break;
 				}
 			}
 		}
-		self::$listings = ( new Additions() )->deduplicate( self::$listings );
-
-		if ( ! empty( self::$listings ) ) {
-			self::$additions = array_merge( self::$additions, self::$listings );
-			update_site_option( 'git_updater_additions', self::$additions );
-		}
+		self::$collections = ( new Additions() )->deduplicate( self::$collections );
+		self::$additions   = array_merge( self::$additions, self::$collections );
+		update_site_option( 'git_updater_additions', self::$additions );
 	}
 }

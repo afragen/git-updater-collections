@@ -1,14 +1,14 @@
 <?php
 /**
- * Git Updater Federation
+ * Git Updater Collections
  *
  * @author    Andy Fragen
  * @license   MIT
- * @link      https://github.com/afragen/git-updater-federation
- * @package   git-updater-federation
+ * @link      https://github.com/afragen/git-updater-collections
+ * @package   git-updater-collections
  */
 
-namespace Fragen\Git_Updater\Federation;
+namespace Fragen\Git_Updater\Collections;
 
 /*
  * Exit if called directly.
@@ -54,6 +54,6 @@ class Bootstrap {
 	public function run() {
 		new Init();
 		( new Settings() )->load_hooks();
-		register_deactivation_hook( $this->file, [ new Federation(), 'blast_cache' ] );
+		register_deactivation_hook( $this->file, [ new Collections(), 'blast_cache' ] );
 	}
 }
