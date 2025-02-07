@@ -58,26 +58,19 @@ class Repo_List_Table extends \WP_List_Table {
 	public function __construct( $options ) {
 		global $status, $page;
 
-		self::$types = [
-			'collection' => __( 'Listing', 'git-updater-collections' ),
-		];
-
 		$examples = [
 			[
-				'ID'   => md5( 'https://git-updater.com' ),
-				'type' => self::$types['collection'],
-				'uri'  => 'https://git-updater.com',
+				'ID'  => md5( 'https://git-updater.com' ),
+				'uri' => 'https://git-updater.com',
 			],
 			[
-				'ID'   => md5( 'https://thefragens.net' ),
-				'type' => self::$types['collection'],
-				'uri'  => 'https://thefragens.net',
+				'ID'  => md5( 'https://thefragens.net' ),
+				'uri' => 'https://thefragens.net',
 			],
 		];
 		// self::$examples = $examples;
 		foreach ( (array) $options as $key => $option ) {
-			$option['ID'] = $option['ID'] ?: null;
-			// $option['type']  = $option['type'] ?: null;
+			$option['ID']    = $option['ID'] ?: null;
 			$option['uri']   = $option['uri'] ?: null;
 			$options[ $key ] = $option;
 		}
@@ -117,7 +110,6 @@ class Repo_List_Table extends \WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'uri':
-			case 'type':
 				return $item[ $column_name ];
 			default:
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
@@ -207,7 +199,6 @@ class Repo_List_Table extends \WP_List_Table {
 	public function get_columns() {
 		$columns = [
 			// 'cb'             => '<input type="checkbox" />', // Render a checkbox instead of text.
-			// 'type' => esc_html__( 'Type', 'git-updater-collections' ),
 			'uri' => esc_html__( 'URI', 'git-updater-collections' ),
 		];
 
@@ -231,7 +222,6 @@ class Repo_List_Table extends \WP_List_Table {
 	public function get_sortable_columns() {
 		$sortable_columns = [
 			'uri' => [ 'uri', true ],     // true means it's already sorted.
-			// 'type' => [ 'type', false ],
 		];
 
 		return $sortable_columns;
