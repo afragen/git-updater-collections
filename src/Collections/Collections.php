@@ -148,13 +148,13 @@ class Collections {
 	}
 
 	/**
-	 * Empty caches on collection removal.
+	 * Empty single cache on collection removal.
 	 *
 	 * @param string $uri_hash MD5 hash of URI.
 	 *
 	 * @return void
 	 */
-	public function blast_cache_on_delete( $uri_hash ) {
+	public function blast_single_cache( $uri_hash ) {
 		$options = get_site_option( 'git_updater_collections' );
 		foreach ( $options as $option ) {
 			if ( $uri_hash === $option['ID'] ) {
@@ -180,9 +180,9 @@ class Collections {
 	 *
 	 * @return void
 	 */
-	public function blast_cache() {
+	public function blast_all_caches() {
 		foreach ( self::$options as $collection ) {
-			$this->blast_cache_on_delete( $collection['ID'] );
+			$this->blast_single_cache( $collection['ID'] );
 		}
 	}
 

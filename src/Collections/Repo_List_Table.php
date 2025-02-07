@@ -268,7 +268,7 @@ class Repo_List_Table extends \WP_List_Table {
 		foreach ( $uris as $uri ) {
 			foreach ( self::$options as $key => $option ) {
 				if ( in_array( $uri, $option, true ) ) {
-					( new Collections() )->blast_cache_on_delete( $uri );
+					( new Collections() )->blast_single_cache( $uri );
 					unset( self::$options[ $key ] );
 					update_site_option( 'git_updater_collections', self::$options );
 				}
