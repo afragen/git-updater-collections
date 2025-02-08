@@ -143,9 +143,7 @@ class Init {
 		) {
 			$response = wp_remote_post( home_url() . '/wp-json/git-updater/v1/update-api-additions/' );
 			if ( 200 !== wp_remote_retrieve_response_code( $response ) || is_wp_error( $response ) ) {
-				$res->info['count'] = 0;
-				$res->themes        = [];
-				return $res;
+				return $response;
 			}
 
 			$response = json_decode( wp_remote_retrieve_body( $response ) ); // Do not convert object to associative array.
@@ -168,7 +166,7 @@ class Init {
 			);
 
 			// Required for theme installation.
-			if ( 'theme_information' === $action ) {
+			if ( 'theme_information' === $action && isset( $response[ $res->slug ] ) ) {
 				$res->download_link = $response[ $res->slug ]->download_link;
 				return $res;
 			}
