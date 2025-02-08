@@ -213,7 +213,7 @@ class Collections {
 	protected function unique_packages() {
 		foreach ( self::$options as $repo ) {
 			$add_repo          = $this->get_repo_cache( $repo['uri'] );
-			$add_repo          = $add_repo ? $add_repo[ $repo['uri'] ] : [];
+			$add_repo          = $add_repo[ $repo['uri'] ] ?: [];
 			self::$collections = array_merge( self::$collections, $add_repo );
 		}
 
