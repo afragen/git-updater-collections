@@ -13,7 +13,7 @@
  * Plugin Name:       Git Updater - Collections
  * Plugin URI:        https://github.com/afragen/git-updater-collections
  * Description:       Federate with other Git Updater Update API servers.
- * Version:           0.4.0
+ * Version:           0.4.0.1
  * Author:            Andy Fragen
  * License:           MIT
  * Network:           true
