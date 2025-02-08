@@ -90,7 +90,6 @@ class Settings {
 			$bad_input   = empty( $new_options[0]['uri'] );
 
 			foreach ( $options as $option ) {
-				$bad_input = $bad_input || empty( $new_options[0]['uri'] );
 				$duplicate = in_array( $new_options[0]['ID'], $option, true );
 				if ( $duplicate || $bad_input ) {
 					$_POST['action'] = false;
