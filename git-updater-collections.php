@@ -14,7 +14,7 @@
  * Plugin URI:        https://github.com/afragen/git-updater-collections
  * Description:       Federate with other Git Updater Update API servers.
  * Version:           0.4.0.2
- * Author:            Andy Fragen
+ * Author:            Andy Fragen, Colin Stewart
  * License:           MIT
  * Network:           true
  * Domain Path:       /languages
