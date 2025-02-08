@@ -1,6 +1,6 @@
 # Git Updater - Collections
 
-* Contributors: afragen
+* Contributors: afragen, costdev
 * Tags: collections, packages, git updater
 * Requires at least: 6.6
 * Requires PHP: 8.0
