@@ -86,11 +86,10 @@ class Settings {
 			'git_updater_collections' === $post_data['option_page']
 		) {
 			$new_options = $post_data['git_updater_collections'] ?? [];
-
 			$new_options = $this->sanitize( $new_options );
+			$bad_input   = empty( $new_options[0]['uri'] );
 
 			foreach ( $options as $option ) {
-				$bad_input = $bad_input || empty( $new_options[0]['uri'] );
 				$duplicate = in_array( $new_options[0]['ID'], $option, true );
 				if ( $duplicate || $bad_input ) {
 					$_POST['action'] = false;

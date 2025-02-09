@@ -148,17 +148,18 @@ class Collections {
 	}
 
 	/**
-	 * Empty caches on collection removal.
+	 * Empty single cache on collection removal.
 	 *
 	 * @param string $uri_hash MD5 hash of URI.
 	 *
 	 * @return void
 	 */
-	public function blast_cache_on_delete( $uri_hash ) {
+	public function blast_single_cache( $uri_hash ) {
 		$options = get_site_option( 'git_updater_collections' );
 		foreach ( $options as $option ) {
 			if ( $uri_hash === $option['ID'] ) {
 				$this->set_repo_cache( $option['uri'], false, $option['uri'] );
+				$this->delete_cached_data( $option['ID'] );
 				$this->set_repo_cache( 'git_updater_repository_add_plugin', false, 'git_updater_repository_add_plugin' );
 				$this->set_repo_cache( 'git_updater_repository_add_theme', false, 'git_updater_repository_add_theme' );
 			}
@@ -168,6 +169,9 @@ class Collections {
 				}
 			}
 		}
+		$this->delete_cached_data( md5( 'plugin' ) );
+		$this->delete_cached_data( md5( 'theme' ) );
+
 		update_site_option( 'git_updater_additions', self::$additions );
 	}
 
@@ -176,10 +180,29 @@ class Collections {
 	 *
 	 * @return void
 	 */
-	public function blast_cache() {
+	public function blast_all_caches() {
 		foreach ( self::$options as $collection ) {
-			$this->blast_cache_on_delete( $collection['ID'] );
+			$this->blast_single_cache( $collection['ID'] );
 		}
+	}
+
+	/**
+	 * Delete Collections `ghu-` prefixed data from options table.
+	 *
+	 * @param string $cache_key MD5 hash of cache ID.
+	 *
+	 * @return bool
+	 */
+	public function delete_cached_data( $cache_key ) {
+		global $wpdb;
+
+		$table         = is_multisite() ? $wpdb->base_prefix . 'sitemeta' : $wpdb->base_prefix . 'options';
+		$column        = is_multisite() ? 'meta_key' : 'option_name';
+		$delete_string = 'DELETE FROM ' . $table . ' WHERE ' . $column . ' LIKE %s LIMIT 1000';
+
+		$wpdb->query( $wpdb->prepare( $delete_string, [ "%ghu-{$cache_key}%" ] ) ); // phpcs:ignore
+
+		return true;
 	}
 
 	/**
@@ -190,7 +213,7 @@ class Collections {
 	protected function unique_packages() {
 		foreach ( self::$options as $repo ) {
 			$add_repo          = $this->get_repo_cache( $repo['uri'] );
-			$add_repo          = $add_repo ? $add_repo[ $repo['uri'] ] : [];
+			$add_repo          = $add_repo ? ( $add_repo[ $repo['uri'] ] ?: [] ) : [];
 			self::$collections = array_merge( self::$collections, $add_repo );
 		}
 

@@ -52,8 +52,11 @@ class Bootstrap {
 	 * @return bool|void
 	 */
 	public function run() {
+		if ( ! trait_exists( '\\Fragen\\Git_Updater\\Traits\\GU_Trait' ) ) {
+			return;
+		}
 		new Init();
 		( new Settings() )->load_hooks();
-		register_deactivation_hook( $this->file, [ new Collections(), 'blast_cache' ] );
+		register_deactivation_hook( $this->file, [ new Collections(), 'blast_all_caches' ] );
 	}
 }

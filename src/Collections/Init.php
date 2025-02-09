@@ -43,6 +43,10 @@ class Init {
 				}
 			}
 		);
+
+		// Add theme data.
+		add_action( 'admin_enqueue_scripts', [ $this,'add_third_party_tab' ] );
+		add_filter( 'themes_api_result', [ $this,'themes_api_result' ], 10, 3 );
 	}
 
 	/**
@@ -103,6 +107,76 @@ class Init {
 				'results' => count( $response ),
 			];
 			$res->plugins = $response;
+		}
+
+		return $res;
+	}
+
+	/**
+	 * Add 'Third Party' tab in Add Themes page.
+	 *
+	 * @param string $hook Hook name.
+	 *
+	 * @return void
+	 */
+	public function add_third_party_tab( $hook ) {
+		if ( 'theme-install.php' === $hook ) {
+			$tab_link = '<li><a href="#" data-sort="third-party">Third Party</a></li>';
+			wp_add_inline_script(
+				'theme', // The handle of Core's theme(.min).js file.
+				"($ => $('.filter-links').append('{$tab_link}') )(jQuery);"
+			);
+		}
+	}
+
+	/**
+	 * Modify themes_api() response.
+	 *
+	 * @param stdClass $res    Object of results.
+	 * @param string   $action Variable for themes_api().
+	 * @param stdClass $args   Object of themes_api() args.
+	 * @return stdClass
+	 */
+	public function themes_api_result( $res, $action, $args ) {
+		if ( ( property_exists( $args, 'browse' ) && 'third-party' === $args->browse )
+			|| 'theme_information' === $action
+		) {
+			$response = wp_remote_post( home_url() . '/wp-json/git-updater/v1/update-api-additions/' );
+			if ( 200 !== wp_remote_retrieve_response_code( $response ) || is_wp_error( $response ) ) {
+				return $response;
+			}
+
+			$response = json_decode( wp_remote_retrieve_body( $response ) ); // Do not convert object to associative array.
+			$response = array_filter(
+				(array) $response, // Convert the outer object to an array for now.
+				function ( $item ) {
+					return 'theme' === $item->type;
+				}
+			);
+
+			// Fix some properties.
+			$response = array_map(
+				function ( $item ) {
+					$item->author      = [ 'display_name' => $item->author ];
+					$item->description = $item->sections->description;
+					$item->preview_url = $item->preview_url ?? '';
+					return $item;
+				},
+				$response
+			);
+
+			// Required for theme installation.
+			if ( 'theme_information' === $action && isset( $response[ $res->slug ] ) ) {
+				$res->download_link = $response[ $res->slug ]->download_link;
+				return $res;
+			}
+
+			$res->info   = [
+				'page'    => 1,
+				'pages'   => 1,
+				'results' => count( $response ),
+			];
+			$res->themes = array_values( $response ); // Make it an object again.
 		}
 
 		return $res;

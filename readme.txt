@@ -1,12 +1,12 @@
 # Git Updater - Collections
 
-* Contributors: afragen
+* Contributors: afragen, costdev
 * Tags: collections, packages, git updater
 * Requires at least: 6.6
 * Requires PHP: 8.0
 * Tested up to: trunk
 * Stable tag: main
-* Donate link: <https://thefragens.com/git-updater-donate>
+* Donate link: https://thefragens.com/git-updater-donate
 * License: MIT
 
 
