@@ -2,7 +2,7 @@
 
 ### for Git Updater plugin
 
-* Contributors: [Andy Fragen](https://github.com/afragen), [contributors](https://github.com/afragen/git-updater-gist/graphs/contributors)
+* Contributors: [Andy Fragen](https://github.com/afragen), [contributors](https://github.com/afragen/git-updater-collections/graphs/contributors)
 * Tags: collections, packages, git updater
 * Requires at least: 6.6
 * Requires PHP: 8.0
