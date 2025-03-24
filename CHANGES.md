@@ -1,4 +1,5 @@
 #### [unreleased]
+* update `Collections::unique_packages()` to improve removal of collections
 
 #### 0.6.0 / 2025-0-21
 * add/remove Collections of Git Updater Update API Servers

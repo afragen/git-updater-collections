@@ -215,6 +215,15 @@ class Collections {
 			$add_repo          = $this->get_repo_cache( $repo['uri'] );
 			$add_repo          = $add_repo ? ( $add_repo[ $repo['uri'] ] ?: [] ) : [];
 			self::$collections = array_merge( self::$collections, $add_repo );
+
+			// Remove any current source collections from self::$additions.
+			self::$additions = array_merge( self::$additions, $add_repo );
+			self::$additions = array_filter(
+				self::$additions,
+				function ( $added ) use ( &$repo ) {
+					return $added['source'] !== $repo['ID'];
+				}
+			);
 		}
 
 		foreach ( self::$additions as $key_add => $addition ) {
