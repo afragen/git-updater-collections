@@ -1,4 +1,5 @@
 #### [unreleased]
+* un-escape using `use`
 
 #### 0.6.1 / 2025-03-24
 * update `Collections::unique_packages()` to improve removal of collections
